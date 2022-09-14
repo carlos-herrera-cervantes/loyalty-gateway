@@ -1,0 +1,30 @@
+http:
+  port: ${API_PORT}
+admin:
+  port: ${ADMIN_PORT}
+  host: ${ADMIN_HOST}
+apiEndpoints:
+  api:
+    host: ${API_HOST}
+    paths: '/ip'
+serviceEndpoints:
+  httpbin:
+    url: 'https://httpbin.org'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin 
+              changeOrigin: true
