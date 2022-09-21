@@ -7,18 +7,39 @@ apiEndpoints:
   api:
     host: ${API_HOST}
     paths: '/ip'
+
+  # ALL REGION
+
+  # PUBLIC REGION
+
+  authorizerPublic:
+    host: ${INTERNAL_HOST}
+    paths:
+      - /authorizer/authentication/sign-in
+
+  # PRIVATE REGION
+
+  authorizerPrivate:
+    host: ${INTERNAL_HOST}
+    paths:
+      - /authorizer/authentication/sign-out
+      - /authorizer/users
+      - /authorizer/consumers
+      - /authorizer/consumers/disable/:id
+      - /authorizer/users/disable/:id
+
 serviceEndpoints:
   httpbin:
     url: 'https://httpbin.org'
+  authorizerService:
+    url: ${AUTHORIZER_URL}
 policies:
-  - basic-auth
-  - cors
-  - expression
-  - key-auth
   - log
-  - oauth2
   - proxy
-  - rate-limit
+  - jwt
+  - request-transformer
+  - jwt-validator
+  - api-key-validator
 pipelines:
   default:
     apiEndpoints:
@@ -27,4 +48,46 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: httpbin 
+              changeOrigin: true
+
+  # ALL REGION
+
+  # PUBLIC REGION
+
+  authorizerPublicPipeline:
+    apiEndpoints:
+      - authorizerPublic
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: authorizerService
+              changeOrigin: true
+
+  # PRIVATE REGION
+
+  authorizerPrivatePipeline:
+    apiEndpoints:
+      - authorizerPrivate
+    policies:
+      - jwt:
+          - action:
+              secretOrPublicKey: ${JWT_SECRET_KEY}
+              checkCredentialExistence: false
+      - request-transformer:
+          - action:
+              headers:
+                add:
+                  user-email: req.user.sub
+          - action:
+              headers:
+                add:
+                  user-id: req.user.jti
+          - action:
+              headers:
+                add:
+                  user-roles: req.user.aud
+      - jwt-validator:
+      - proxy:
+          - action:
+              serviceEndpoint: authorizerService
               changeOrigin: true
