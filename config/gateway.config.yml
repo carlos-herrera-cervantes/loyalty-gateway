@@ -33,6 +33,8 @@ apiEndpoints:
     paths:
       - /program/organizations
       - /program/organizations/:id
+      - /program/organizations/:id/buckets
+      - /program/organizations/:id/buckets/:id
 
 serviceEndpoints:
   httpbin:
