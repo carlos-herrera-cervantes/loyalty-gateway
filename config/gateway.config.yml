@@ -39,6 +39,8 @@ apiEndpoints:
       - /program/organizations/:id/buckets/:id/campaigns/:id
       - /program/actions
       - /program/actions/:id
+      - /program/operations
+      - /program/operations/:id
 
 serviceEndpoints:
   httpbin:
