@@ -39,6 +39,8 @@ apiEndpoints:
       - /program/organizations/:id/buckets/:id/campaigns/:id
       - /program/organizations/:id/buckets/:id/campaigns/:id/event-codes
       - /program/organizations/:id/buckets/:id/campaigns/:id/event-codes/:id
+      - /program/organizations/:id/buckets/:id/campaigns/:id/event-codes/:id/tasks
+      - /program/organizations/:id/buckets/:id/campaigns/:id/event-codes/:id/tasks/:id
       - /program/actions
       - /program/actions/:id
       - /program/operations
